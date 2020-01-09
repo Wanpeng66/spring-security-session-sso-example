@@ -33,7 +33,7 @@ public class SpringSecurityConfig  extends WebSecurityConfigurerAdapter {
     @Override
     public void configure( HttpSecurity http) throws Exception {
         http.apply( customUserSecurityConfig );
-        http.authorizeRequests().antMatchers( "" ).permitAll();
+        http.authorizeRequests().antMatchers( "/" ).permitAll();
         http.formLogin().loginPage( "/sso/login" ).successForwardUrl( "/login/Fallback" ).failureForwardUrl( "/login/error" ).permitAll();
         http.logout().permitAll();
         http.sessionManagement().maximumSessions( 1 ).maxSessionsPreventsLogin( false )

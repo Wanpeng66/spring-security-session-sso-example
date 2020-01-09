@@ -1,7 +1,7 @@
 package com.wp.dao;
 
-import com.wp.domain.SysUserRole;
-import com.wp.domain.UserRole;
+import com.wp.entity.SysUserRole;
+import com.wp.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

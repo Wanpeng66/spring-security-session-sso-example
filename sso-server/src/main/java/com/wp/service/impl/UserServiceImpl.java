@@ -2,8 +2,8 @@ package com.wp.service.impl;
 
 import com.wp.dao.UserRepository;
 import com.wp.dao.UserRoleRepository;
-import com.wp.domain.SysUser;
-import com.wp.domain.SysUserRole;
+import com.wp.entity.SysUser;
+import com.wp.entity.SysUserRole;
 import com.wp.service.RoleService;
 import com.wp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.wp.dao;
 
-import com.wp.domain.SysUser;
+import com.wp.entity.SysUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
