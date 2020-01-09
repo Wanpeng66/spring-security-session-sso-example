@@ -11,5 +11,7 @@ import com.wp.entity.Token;
  */
 public interface RedisService {
 
-    Token findByToken();
+    Token findByToken(String token);
+
+    void save( Token token );
 }

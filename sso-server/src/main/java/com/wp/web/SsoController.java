@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author: wp
@@ -28,27 +31,32 @@ public class SsoController {
 
     @GetMapping("/sso/login")
     public String login( HttpServletRequest request, HttpServletResponse response ){
-        String  token = (String) request.getSession().getAttribute( "token" );
-        //如果之前没登陆过
-        if(StringUtils.isEmpty( token )){
-            return "login";
-        }else{
-            return "forward:/login/fallback";
-        }
+        String fallback = request.getParameter( "fallback" );
+        String logoutUrl = request.getParameter( "logoutUrl" );
+        request.getSession().setAttribute( "fallback",fallback );
+        request.getSession().setAttribute( "logoutUrl",logoutUrl );
 
+        return "login";
     }
 
     @GetMapping("/login/fallback")
-    public void fallback(HttpServletRequest request, HttpServletResponse response){
-        String fallback = request.getParameter( "fallback" );
-        String logoutUrl = request.getParameter( "logoutUrl" );
+    public String fallback(HttpServletRequest request, HttpServletResponse response){
+        String fallback = (String) request.getSession().getAttribute( "fallback" );
+        String logoutUrl = (String) request.getSession().getAttribute( "logoutUrl" );
         String  tokenStr = (String) request.getSession().getAttribute( "token" );
-        Token token =  redisService.findByToken();
-        if(!token.getClients().contains( logoutUrl )){
-            token.getClients().add( logoutUrl );
+        if(!StringUtils.isEmpty( tokenStr )){
+            Token token =  redisService.findByToken(tokenStr);
+            if(!token.getClients().contains( logoutUrl )){
+                token.getClients().add( logoutUrl );
+            }
+            return "redirect:"+fallback+"?token="+token.getUserToken();
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        Token token = new Token();
+        token.setUserToken( UUID.randomUUID().toString() );
+        token.setClients( Arrays.asList( logoutUrl ) );
+        redisService.save(token);
+        return "redirect:"+fallback+"?token="+token.getUserToken();
 
     }
 

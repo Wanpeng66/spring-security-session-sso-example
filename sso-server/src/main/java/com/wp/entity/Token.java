@@ -2,6 +2,7 @@ package com.wp.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @date 2020/1/9 17:29
  */
 @Data
-public class Token {
+public class Token implements Serializable {
     private String userToken;
     private List<String> clients;
 

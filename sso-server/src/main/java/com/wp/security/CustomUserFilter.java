@@ -1,11 +1,9 @@
-package com.wp.entity;
+package com.wp.security;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -30,11 +28,8 @@ public class CustomUserFilter extends AbstractAuthenticationProcessingFilter {
     private String checkCodeParameter = SPRING_SECURITY_FORM_CHECK_CODE;
     private boolean postOnly = true;
 
-    protected CustomUserFilter( String defaultFilterProcessesUrl ) {
-        super( defaultFilterProcessesUrl );
-    }
 
-    protected CustomUserFilter( RequestMatcher requiresAuthenticationRequestMatcher ) {
+    protected CustomUserFilter(  ) {
         super( new AntPathRequestMatcher("/sso/login", "POST") );
     }
 

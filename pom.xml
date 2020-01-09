@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>sso-server</module>
+		<module>clint-a</module>
 	</modules>
 
 	<properties>

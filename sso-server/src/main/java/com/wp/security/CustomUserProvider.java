@@ -1,11 +1,8 @@
-package com.wp.entity;
+package com.wp.security;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,9 +38,9 @@ public class CustomUserProvider implements AuthenticationProvider {
 
         HttpServletRequest request = ( (ServletRequestAttributes) RequestContextHolder.getRequestAttributes() ).getRequest();
         String targetCode = (String) request.getSession().getAttribute( CustomUserFilter.SPRING_SECURITY_FORM_CHECK_CODE );
-        if(!checkCode.equals( targetCode )){
+        /*if(!checkCode.equals( targetCode )){
             throw new BadCredentialsException( "验证码错误..." );
-        }
+        }*/
         UserDetails userDetails = this.getCustomUserDetailsService().loadUserByUsername( username );
         if (userDetails == null) {
             throw new InternalAuthenticationServiceException(

@@ -1,4 +1,4 @@
-package com.wp.entity;
+package com.wp.security;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -12,21 +12,22 @@ import javax.annotation.Resource;
 
 /**
  * @author: wp
- * @Title: CustomUserSecurityConfig
+ * @Title: SsoClientConfig
  * @Description: TODO
- * @date 2020/1/9 17:05
+ * @date 2020/1/9 20:55
  */
 @Component
-public class CustomUserSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class SsoClientConfig  extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+
     @Resource(name="customUserDetailService")
     UserDetailsService userDetailsService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        CustomUserFilter customUserFilter = new CustomUserFilter();
+        SsoClientFilter customUserFilter = new SsoClientFilter();
         customUserFilter.setAuthenticationManager(http.getSharedObject( AuthenticationManager.class));
 
-        CustomUserProvider customUserProvider = new CustomUserProvider();
+        SsoClientProvider customUserProvider = new SsoClientProvider();
         customUserProvider.setCustomUserDetailsService( userDetailsService );
 
         http.authenticationProvider(customUserProvider)
