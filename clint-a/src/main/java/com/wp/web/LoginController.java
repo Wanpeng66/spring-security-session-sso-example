@@ -1,6 +1,7 @@
 package com.wp.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @Slf4j
 public class LoginController  {
+    @Value( "${sso.server.url:/}" )
+    String ssoUrl;
+
+    @GetMapping("/login")
+    public String login(){
+        return "redirect:"+ssoUrl;
+    }
 
     @GetMapping("/index")
     public String index(){

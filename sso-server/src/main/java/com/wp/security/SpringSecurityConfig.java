@@ -3,10 +3,12 @@ package com.wp.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
@@ -32,12 +34,34 @@ public class SpringSecurityConfig  extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure( HttpSecurity http) throws Exception {
-        http.apply( customUserSecurityConfig );
-        http.authorizeRequests().antMatchers( "/" ).permitAll();
-        http.formLogin().loginPage( "/sso/login" ).successForwardUrl( "/login/Fallback" ).failureForwardUrl( "/login/error" ).permitAll();
-        http.logout().permitAll();
-        http.sessionManagement().maximumSessions( 1 ).maxSessionsPreventsLogin( false )
+        http.apply( customUserSecurityConfig ).
+                and().authorizeRequests().anyRequest().authenticated()
+                .and().formLogin().loginPage( "/login" ).loginProcessingUrl( "/sso/login" )
+                .successForwardUrl( "/login/Fallback" )
+                .failureForwardUrl( "/login/error" ).permitAll()
+                .and().sessionManagement().maximumSessions( 1 ).maxSessionsPreventsLogin( false )
                 .sessionRegistry( springSessionBackedSessionRegistry() );
+        http.csrf().disable();
+    }
+
+    @Override
+    protected void configure( AuthenticationManagerBuilder auth) throws Exception{
+        //基于内存来存储用户信息
+        /*auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
+                .withUser("user").password(new BCryptPasswordEncoder().encode("123")).roles("USER").and()
+                .withUser("admin").password(new BCryptPasswordEncoder().encode("456")).roles("USER","ADMIN");*/
+        auth.userDetailsService(customUserSecurityConfig.userDetailsService ).passwordEncoder( new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence charSequence) {
+                return charSequence.toString();
+            }
+
+            @Override
+            public boolean matches(CharSequence charSequence, String s) {
+                return s.equals(charSequence.toString());
+            }
+        } );
+
     }
 
 

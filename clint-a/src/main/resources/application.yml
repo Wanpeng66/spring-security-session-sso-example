@@ -25,5 +25,5 @@ spring:
         - 106.15.233.201:26381
       master: mymaster
     timeout: 5s
-sso.server.url: http://localhost:9090/login?fallback=http://localhost:9091/clienta/fallback
-sso.token.info: http://localhost:9090/sso/token
+sso.server.url: http://localhost:9000/login?fallback=http://localhost:9091/clienta/fallback
+sso.token.info: http://localhost:9000/sso/token

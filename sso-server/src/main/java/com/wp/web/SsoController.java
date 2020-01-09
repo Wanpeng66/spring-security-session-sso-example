@@ -29,17 +29,16 @@ public class SsoController {
     @Autowired
     RedisService redisService;
 
-    @GetMapping("/sso/login")
+    @GetMapping("/login")
     public String login( HttpServletRequest request, HttpServletResponse response ){
         String fallback = request.getParameter( "fallback" );
         String logoutUrl = request.getParameter( "logoutUrl" );
         request.getSession().setAttribute( "fallback",fallback );
         request.getSession().setAttribute( "logoutUrl",logoutUrl );
-
         return "login";
     }
 
-    @GetMapping("/login/fallback")
+    @GetMapping("/login/Fallback")
     public String fallback(HttpServletRequest request, HttpServletResponse response){
         String fallback = (String) request.getSession().getAttribute( "fallback" );
         String logoutUrl = (String) request.getSession().getAttribute( "logoutUrl" );

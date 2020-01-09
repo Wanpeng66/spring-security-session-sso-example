@@ -21,8 +21,7 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig  extends WebSecurityConfigurerAdapter {
-    @Value( "${sso.server.url:/}" )
-    String ssoUrl;
+
     @Autowired
     SsoClientConfig ssoClientConfig;
 
@@ -38,8 +37,8 @@ public class SpringSecurityConfig  extends WebSecurityConfigurerAdapter {
     @Override
     public void configure( HttpSecurity http) throws Exception {
         http.apply( ssoClientConfig );
-        http.authorizeRequests().antMatchers( "/" ).permitAll();
-        http.formLogin().loginPage( ssoUrl ).loginProcessingUrl( "/clienta/fallback" )
+        http.authorizeRequests().antMatchers( "/login","/login/error" ).permitAll().anyRequest().authenticated();
+        http.formLogin().loginPage( "/login" ).loginProcessingUrl( "/clienta/fallback" )
                 .successForwardUrl( "/index" ).failureForwardUrl( "/login/error" ).permitAll();
         http.logout().permitAll();
         http.sessionManagement().maximumSessions( 1 ).maxSessionsPreventsLogin( false )
