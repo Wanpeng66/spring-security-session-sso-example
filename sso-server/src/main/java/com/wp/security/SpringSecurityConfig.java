@@ -34,9 +34,9 @@ public class SpringSecurityConfig  extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure( HttpSecurity http) throws Exception {
-        http.apply( customUserSecurityConfig ).
-                and().authorizeRequests().anyRequest().authenticated()
-                .and().formLogin().loginPage( "/login" ).loginProcessingUrl( "/sso/login" )
+       /* http.apply( customUserSecurityConfig ).and()*/
+                http.authorizeRequests().antMatchers( "/login","/favicon.ico" ).permitAll().anyRequest().authenticated()
+                .and().formLogin().loginPage( "/login" ).loginProcessingUrl( "/sso" )
                 .successForwardUrl( "/login/Fallback" )
                 .failureForwardUrl( "/login/error" ).permitAll()
                 .and().sessionManagement().maximumSessions( 1 ).maxSessionsPreventsLogin( false )

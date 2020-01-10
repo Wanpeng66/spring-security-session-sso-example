@@ -1,5 +1,6 @@
 package com.wp.security;
 
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -23,21 +24,35 @@ public class CustomUserFilter extends AbstractAuthenticationProcessingFilter {
     public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "username";
     public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "password";
 
+
     private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
     private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
     private String checkCodeParameter = SPRING_SECURITY_FORM_CHECK_CODE;
+
     private boolean postOnly = true;
 
 
     protected CustomUserFilter(  ) {
-        super( new AntPathRequestMatcher("/sso/login", "POST") );
+        super( new AntPathRequestMatcher("/sso", "POST") );
+    }
+    protected CustomUserFilter( String defaultFilterProcessesUrl ) {
+        super( defaultFilterProcessesUrl );
     }
 
+    protected CustomUserFilter( RequestMatcher requiresAuthenticationRequestMatcher ) {
+        super( requiresAuthenticationRequestMatcher );
+    }
     @Override
     public Authentication attemptAuthentication( HttpServletRequest request, HttpServletResponse response ) throws AuthenticationException, IOException, ServletException {
+        if (postOnly && !request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException(
+                    "Authentication method not supported: " + request.getMethod());
+        }
+
         String username = request.getParameter( usernameParameter );
         String password = request.getParameter( passwordParameter );
         String checkCode = request.getParameter( checkCodeParameter );
+
 
 
         if (username == null) {

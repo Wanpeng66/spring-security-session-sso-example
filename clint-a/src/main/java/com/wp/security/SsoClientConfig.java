@@ -31,6 +31,6 @@ public class SsoClientConfig  extends SecurityConfigurerAdapter<DefaultSecurityF
         customUserProvider.setCustomUserDetailsService( userDetailsService );
 
         http.authenticationProvider(customUserProvider)
-                .addFilterAfter(customUserFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(customUserFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -32,6 +32,6 @@ public class CustomUserSecurityConfig extends SecurityConfigurerAdapter<DefaultS
         customUserProvider.setCustomUserDetailsService( userDetailsService );
 
         http.authenticationProvider(customUserProvider)
-                .addFilterBefore(customUserFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(customUserFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

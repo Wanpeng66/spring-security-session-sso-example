@@ -14,14 +14,17 @@ import java.util.Collection;
 public class CustomUserToken extends UsernamePasswordAuthenticationToken {
     private String checkCode;
 
+
     public CustomUserToken( Object principal, Object credentials,String checkCode ) {
         super( principal, credentials );
         this.checkCode = checkCode;
+
     }
 
-    public CustomUserToken( Object principal, Object credentials,String checkCode,  Collection<? extends GrantedAuthority> authorities ) {
+    public CustomUserToken( Object principal, Object credentials,String checkCode , Collection<? extends GrantedAuthority> authorities ) {
         super( principal, credentials, authorities );
         this.checkCode = checkCode;
+
     }
 
     public String getCheckCode() {

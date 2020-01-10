@@ -7,11 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * @author: wp
@@ -29,14 +31,17 @@ public class SsoUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername( String token ) throws UsernameNotFoundException {
         try{
-            String get = httpUtils.sendHttpGet( tokenInfo + "?token=" + token );
+            if(StringUtils.isEmpty( token )){
+                throw new UsernameNotFoundException( "token为空..." );
+            }
+            String[] split = token.split( "," );
+            String get = httpUtils.sendHttpGet( tokenInfo + "?token=" + split[0],split[1],"" );
             JSONObject jsonObject = JSON.parseObject( get );
-            User userDetails = jsonObject.getJSONObject( "userDetails" ).toJavaObject( User.class );
-
+            User userDetails = jsonObject.toJavaObject( User.class );
             return userDetails;
         }catch(Exception e){
             log.error( "loadUserByUsername异常",e );
-            throw new BadCredentialsException( "根据token拿不到用户信息..." );
+            throw new UsernameNotFoundException( "根据token拿不到用户信息..." );
         }
 
     }

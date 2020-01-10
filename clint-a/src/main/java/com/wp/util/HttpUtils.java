@@ -131,8 +131,9 @@ public class HttpUtils {
      * 发送 get请求
      * @param httpUrl
      */
-    public String sendHttpGet(String httpUrl) {
+    public String sendHttpGet(String httpUrl,String session,String domain) {
         HttpGet httpGet = new HttpGet(httpUrl);// 创建get请求
+        httpGet.setHeader("Cookie","SESSION="+session);
         return sendHttpGet(httpGet);
     }
 
@@ -150,6 +151,7 @@ public class HttpUtils {
             // 创建默认的httpClient实例.
             httpClient = HttpClients.createDefault();
             httpGet.setConfig(requestConfig);
+
             // 执行请求
             response = httpClient.execute(httpGet);
             entity = response.getEntity();

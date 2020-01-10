@@ -27,11 +27,12 @@ public class SsoClientProvider implements AuthenticationProvider {
     public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
         SsoClientToken clientToken = (SsoClientToken)authentication;
         String token = clientToken.getToken();
+        String session = clientToken.getSession();
         if(null==token){
             token = "";
         }
-        UserDetails userDetails = this.getCustomUserDetailsService().loadUserByUsername( token );
-        SsoClientToken result = new SsoClientToken( "","",token,userDetails.getAuthorities() );
+        UserDetails userDetails = this.getCustomUserDetailsService().loadUserByUsername( token+","+session );
+        SsoClientToken result = new SsoClientToken( userDetails.getUsername(),userDetails.getPassword(),token,session,userDetails.getAuthorities() );
         result.setDetails( clientToken.getDetails() );
         return result;
     }
